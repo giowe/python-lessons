@@ -1,0 +1,5 @@
+print('Benvenuto nel nostro primo programma Python!')
+print('Salutiamo qualcuno!')
+nome = input('Inserisci il nome: ')
+cognome = input('Inserisci il cognome: ')
+print('Ciaone ' + nome + ' ' + cognome)
