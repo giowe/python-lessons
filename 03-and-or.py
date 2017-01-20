@@ -1,7 +1,7 @@
 print('programma protetto da password')
 username = input('username: ')
 password = input('password: ')
-
+  
 if username == 'tizio' and password == 'caio':
   print('accesso effettuato')
   anni = int(input('quanti anni hai? '))
