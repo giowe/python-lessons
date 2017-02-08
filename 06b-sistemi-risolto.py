@@ -1,0 +1,62 @@
+print('ax + by + cz = d')
+print()
+a = float(input('inserisci "a" '))
+print()
+b = float(input('inserisci "b" '))
+print()
+c = float(input('inserisci "c" '))
+print()
+d = float(input('inserisci "d" '))
+print()
+print('a1x + b1y + c1z = d1')
+print()
+a1 = float(input('inserisci "a1" '))
+print()
+b1 = float(input('inserisci "b1" '))
+print()
+c1 = float(input('inserisci "c1" '))
+print()
+d1 = float(input('inserisci "d1" '))
+print()
+print('a2x + b2y + c2z = d2')
+print()
+a2 = float(input('inserisci "a2" '))
+print()
+b2 = float(input('inserisci "b2" '))
+print()
+c2 = float(input('inserisci "c2" '))
+print()
+d2 = float(input('inserisci "d2" '))
+
+det = (a*b1*c2+a1*b2*c+b*c1*a2)-(a2*b1*c+a1*b*c2+a*b2*c1)
+
+if det == 0:
+  print("Il sistema è indeterminato...")
+  print("Il programma è concluso")
+else:
+  dx = (d*b1*c2+d1*b2*c+d2*b*c1)-(c*b1*d2+b*d1*c2+d*c1*b2)
+  dy = (a*d1*c2+d*c1*a2+a1*d2*c)-(a2*d1*c+a1*d*c2+d2*c1*a)
+  dz = (a*b1*d2+a1*b2*d+a2*b*d1)-(d*b1*a2+b*a1*d2+a*d1*b2)
+ 
+  x = dx/det
+  y = dy/det
+  z = dz/det
+  
+  print()
+
+  print("Il sitema da risolvere é:")
+  print(a,"x +",b,"y +",c,"z=",d)
+  print()
+  print(a1,"x +",b1,"y +",c1,"z=",d1)
+  print()
+  print(a2,"x +",b2,"y +",c2,"z=",d2)
+  print()
+  input("PREMI INVIO PER SAPERE LE SOLUZIONI:")
+  print("x =",x)
+  print()
+  print("y =",y)
+  print()
+  print("z =",z)
+
+print() 
+print("FINE!")
