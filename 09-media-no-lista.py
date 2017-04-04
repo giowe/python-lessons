@@ -1,7 +1,8 @@
 materia = input('Dimmi di che materia stiamo parlando? ')
-#sommatoria = 0
-#nVoti = 0
-listaVoti = []
+
+sommatoria = 0
+nVoti = 0
+
 while True:
 	votoCorrente = float(input('inserisci un voto: '))
 	if votoCorrente > 10 or votoCorrente < 0:
@@ -9,9 +10,8 @@ while True:
 	elif votoCorrente == 0:
 		break
 	else:
-		listaVoti.append(votoCorrente)
+		nVoti += 1
+		sommatoria += votoCorrente
 
-#media = sommatoria / nVoti
-#print('Fino ad ora in', materia, 'hai preso', nVoti, 'voti la cui media è', media)			
-
-print(listaVoti)
+media = sommatoria / nVoti
+print('Fino ad ora in', materia, 'hai preso', nVoti, 'voti la cui media è', media)			
