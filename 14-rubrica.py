@@ -17,7 +17,6 @@ def remove_contact(first_name, last_name):
     if contatto[0] == first_name and contatto[1] == last_name:
       rubrica.remove(contatto)
       return contatto
-
   return None
 
 nomi = ['Tizio', 'Caio', 'Sempronio', 'Proserpina', 'Letizia']
@@ -27,6 +26,7 @@ def seeder(number):
   for i in range(number):
     nome = nomi[randint(0, len(nomi)-1)]
     cognome = congomi[randint(0, len(congomi)-1)]
+    
     telefono = ''
     for n in range(10):
       telefono += str(randint(0,9))
@@ -36,7 +36,7 @@ def seeder(number):
 def print_contact(index):
 	global rubrica
 	contact = rubrica[index]
-	print(index+1, add_padding(contact[0]), add_padding(contact[1]), add_padding(contact[2]))
+	print(add_padding(str(index+1), 4), add_padding(contact[0]), add_padding(contact[1]), add_padding(contact[2]))
 
 def print_rubrica(skip, limit):
   for i in range(skip, skip+limit):
