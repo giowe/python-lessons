@@ -14,20 +14,23 @@ def acquista(indiceProdotto):
   return nomeProdotto
 
 def prezzo(nomeProdotto):
-  return len(nomeProdotto) * 0.1
+  return round(len(nomeProdotto) * 0.1, 2)
 
 def checkout():
   prezzoTotale = 0
   for prodotto in carrello:
     prezzoTotale += prezzo(prodotto)
-  return prezzoTotale
+  return round(prezzoTotale, 2)
 
 print('Benvenuto nel mio modesto negozietto, quele vorresti comperare tra i prodotti che ho da offrire?') 
+print('Per concludere l\'acquisto scrivere 666')
+
 for i in range(len(negozio)):
   print(i+1, ')', negozio[i])
 
 while True:
   indiceProdotto = int(input('che prodotto vuoi comperare? '))
+  
   if indiceProdotto == 666:
     break
   else:
@@ -39,5 +42,7 @@ while True:
 print('grazie per aver fatto la spesa da noi! <3')    
 print('puoi pagare in cassa', checkout(), 'euro')
 print('hai acquistato:')
-for prodotto in carrello:
+
+for prodotto in carrello: 
   print(prodotto)
+

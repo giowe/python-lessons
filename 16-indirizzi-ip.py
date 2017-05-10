@@ -14,6 +14,14 @@ def request(ip):
     if blackIp == ip: 
       return False
 
+  #count = 0
+  #for requestedId in richieste:
+  #  if requestedId == ip:
+  #    count += 1
+  #    if count > 3:
+  #      blacklist.append(ip)
+  #      return False
+
   if richieste.count(ip) > 3:
     blacklist.append(ip)
     return False
@@ -22,7 +30,7 @@ def request(ip):
   return True  
 
 blockedCounter = 0
-requests = 30000
+requests = 50000
 for i in range(requests):
   ip = str(randint(1,255)) + '.' + str(randint(1,255))
   if request(ip) == False:
