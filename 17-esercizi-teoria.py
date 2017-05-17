@@ -11,3 +11,8 @@ if a > 3:
     print(x - a + b)
 else:
     print(a - x + b)        
+
+#es.3 scrivi l'output del seguente programma:
+for i in range(3):
+    for l in range(2):
+        print(i*l)
