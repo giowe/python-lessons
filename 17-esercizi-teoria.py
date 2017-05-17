@@ -3,3 +3,11 @@ lista = ['a', 'b', 'c']
 for lettera in lista:
     for i in range(3):
         print(i, lista[i])
+
+#es.2 quale valore deve avere x perchè l'output sia 4
+a = 3
+b = 5
+if a > 3:
+    print(x - a + b)
+else:
+    print(a - x + b)        
