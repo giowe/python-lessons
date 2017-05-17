@@ -16,3 +16,7 @@ else:
 for i in range(3):
     for l in range(2):
         print(i*l)
+
+#es.4 quale valore devono avere S ed E perchè l'output del programma sia 2 3 4 5
+for i in range(S, E):
+    print(i+2)
