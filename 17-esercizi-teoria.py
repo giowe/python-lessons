@@ -20,3 +20,13 @@ for i in range(3):
 #es.4 quale valore devono avere S ed E perchè l'output del programma sia 2 3 4 5
 for i in range(S, E):
     print(i+2)
+
+#es.5 quele output ottengo dal seguente programma:
+lista = ['a', 'b', 'c']
+print(lista[len(lista)-1])
+for i in range(3):
+    print(lista[i])
+    for l in range(3):
+        print(i, l, lista[i], lista[l])
+    print('---')
+print('end.')
