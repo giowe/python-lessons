@@ -31,7 +31,7 @@ d2 = float(input('inserisci "d2" '))
 det = (a*b1*c2+a1*b2*c+b*c1*a2)-(a2*b1*c+a1*b*c2+a*b2*c1)
 
 if det == 0:
-  print("Il sistema è indeterminato...")
+  print("Il sistema non è determinato...")
   print("Il programma è concluso")
 else:
   dx = (d*b1*c2+d1*b2*c+d2*b*c1)-(c*b1*d2+b*d1*c2+d*c1*b2)
@@ -41,21 +41,15 @@ else:
   x = dx/det
   y = dy/det
   z = dz/det
-  
-  print()
 
   print("Il sitema da risolvere é:")
   print(a,"x +",b,"y +",c,"z=",d)
-  print()
   print(a1,"x +",b1,"y +",c1,"z=",d1)
-  print()
   print(a2,"x +",b2,"y +",c2,"z=",d2)
   print()
   input("PREMI INVIO PER SAPERE LE SOLUZIONI:")
   print("x =",x)
-  print()
   print("y =",y)
-  print()
   print("z =",z)
 
 print() 
