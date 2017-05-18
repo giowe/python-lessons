@@ -21,7 +21,7 @@ for i in range(3):
 for i in range(S, E):
     print(i+2)
 
-#es.5 quele output ottengo dal seguente programma:
+#es.5 quale output ottengo dal seguente programma:
 lista = ['a', 'b', 'c']
 print(lista[len(lista)-1])
 for i in range(3):
