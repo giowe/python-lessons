@@ -6,22 +6,22 @@ print("E'stato un lungo viaggio quello che ti ha portato fino a qui, sulla luna 
 print("Stai ammirando il panorama che ti circonda quando improvvisamente si accende la spia che segnala una comunicazione in ingresso;")
 print("Cosa fai?")
 print()
-print("A. Rispondo")
-print("B. Ignoro la chiamata")
-risposta1 = input().upper()
+print("1. Rispondo")
+print("2. Ignoro la chiamata")
+risposta1 = input()
 
-if risposta1 == "A":
+if risposta1 == "1":
   print("Decidi di rispondere alla chiamata;")
   print("Il segnale è molto disturbato ma riesci a capire che è il tuo capo missione.")
   print(nome, "inverti immediatm...grrr...fschhhh...rotta!. SEI IN PERICOLO!")
   print("<...fff..shsssss...tai sorvolando una zona nemica!>")
   print("Cosa fai?")
   print()
-  print("A. Inverto la rotta")
-  print("B. Proseguo per la mia strada")
+  print("1. Inverto la rotta")
+  print("2. Proseguo per la mia strada")
   
-  risposta2 = input().upper()
-  if risposta2 == "A":
+  risposta2 = input()
+  if risposta2 == "1":
     print("Decidi di invertire la rotta.")
   else:
     print("Dopo una valutazione attenta decidi di aumentare il livello di guardia ma di continuare sulla tua rotta.")
@@ -30,10 +30,10 @@ print("All'improvviso vedi un lampo nella fitta boscaglia sottostante.")
 print("Il rilevatore termico ti segnala che sei seguito da un razzo terra aria.")
 print("Cosa fai?")
 print()
-print("A. Tenti una manovra elusiva per schivare il razzo")
-print("B. Ti lanci con il paracadute")
-risposta3 = input().upper()
-if risposta3 == 'A':
+print("1. Tenti una manovra elusiva per schivare il razzo")
+print("2. Ti lanci con il paracadute")
+risposta3 = input()
+if risposta3 == "1":
   print("Fiducioso nelle tue capacità di pilota militare decidi di tentare alcune manovre elusive")
   print("Nonostante i tuoi sforzi")
 
