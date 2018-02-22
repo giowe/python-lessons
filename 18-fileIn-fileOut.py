@@ -12,7 +12,7 @@ def readFile(fileName):
 def saveFile(fileName, list):
   file = open(fileName, "w")
   for r in list:
-    file.write(r + "\n")
+    file.write(str(r) + "\n")
   file.close()
 
 carrello = readFile("./18-input-file.txt")
