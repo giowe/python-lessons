@@ -9,8 +9,10 @@ def readFile(fileName):
 
   return out
 
+lista = readFile('./input1.txt')
+
 somma = 0
-for numero in readFile('./input1.txt'):
+for numero in lista:
   somma += numero
 
 file = open('./output1.txt', 'w')
