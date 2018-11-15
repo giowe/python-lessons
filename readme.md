@@ -1,4 +1,5 @@
 Studiare i seguenti link:
+- istruzioni terminale: http://www.ee.surrey.ac.uk/Teaching/Unix/
 - liste: https://www.tutorialspoint.com/python3/python_lists.htm
 - while: https://www.tutorialspoint.com/python3/python_while_loop.htm
 - for: https://www.tutorialspoint.com/python3/python_for_loop.htm
