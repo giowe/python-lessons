@@ -5,42 +5,63 @@ DIRECTIONS = "w", "a", "s", "d"
 
 class Game():
   def __init__(self, levels):
+    self.game_over_flag = False
+    self.win_flag = False
+
     self.levels = []
     for i in range(levels):
-      self.levels.append(World(randint(10, 30), randint(5, 10), randint(2, 10)))
+      self.levels.append(World(randint(10, 30), randint(5, 10), randint(2, 10), self))
 
     self.current_level_index = 0
 
   def get_current_level(self):
-    if self.get_current_level_index >= len(self.levels):
-      return None
-    
     return self.levels[self.current_level_index]
 
+  def get_player(self):
+    return self.get_current_level().player
+
+  def is_game_running(self):
+    return self.game_over_flag == False and self.win_flag == False
+
   def game_over(self):
-    pass
+    self.game_over_flag = True
 
   def win(self):
-    self.current_level_index += 1
+    if self.current_level_index >= len(self.levels) -1:
+      self.win_flag = True
+    else:
+      self.current_level_index += 1
 
   def draw(self):
     os.system("clear")
-    level = self.get_current_level()
-    if level is None:
+    level = self.get_current_level()  
+    print("---------------------------------------------")
+    print("LEVEL {}".format(self.current_level_index + 1))
+    print("---------------------------------------------")
+    print(level)
+
+    if self.game_over_flag:
+      print("LOOOOSER")
+    elif self.win_flag:
       print("A WINNER IS YOU")
-    else: 
-      print("LEVEL {}".format(self.current_level_index + 1))
-      print(self.get_current_level())
+
 
   def update(self):
-    self.get_current_level().update()
+    if self.is_game_running():
+      self.get_current_level().update()
 
 class World():
-  def __init__(self, w, h, monsters):
+  def __init__(self, w, h, monsters, game):
     self.w = w
     self.h = h
-    self.player = Player(0, 0, self)
-    self.gold = Gold(*self._get_random_coords(), self)
+    self.game = game
+    self.player = Player(0, 0, self) # todo bisogna sistemare il fatto che il player possa essere sul gold
+    while True:
+      x, y = self._get_random_coords()
+      if not (self.player.x == x and self.player.y == y):
+        self.gold = Gold(x, y, self)
+        break
+
     self.entities = [self.player, self.gold]
 
     while len(self.entities) - 2 < monsters:
@@ -120,12 +141,12 @@ class Entity():
     
     if self_class == "Player":
       if entity_class == "Monster":
-        print("Game over")
+        self.world.game.game_over()
       elif entity_class == "Gold":
-        print("WIN")
+        self.world.game.win()
     elif self_class == "Monster":
       if entity_class == "Player":
-        print("Game over")
+        self.world.game.game_over()
 
   def update(self):
     return None
@@ -155,18 +176,26 @@ class Gold(Entity):
     else:
       self.graphic = "O"
 
-level1 = World(5, 11, 3)
+game = Game(2)
 
 while True:
   while True:
-    direction = input("dove vuoi muoverti? (w, a, s, d)")
-    if direction == "q":
+    game.draw()
+
+    if game.is_game_running():
+      print("dove vuoi muoverti? (w, a, s, d)")
+    
+    print("q per uscire")
+    command = input()
+    
+    if command == "q":
       exit()
 
-    if direction in DIRECTIONS:
-      level1.player.move(direction)
-      level1.update()
-      break
-    else:
-      print("direzione non valida")
+    if game.is_game_running():
+      if command in DIRECTIONS:
+        game.get_player().move(command)
+        game.update()
+        break
+      else:
+        print("direzione non valida")
 
