@@ -4,13 +4,13 @@ import os
 DIRECTIONS = "w", "a", "s", "d"
 
 class Game():
-  def __init__(self, levels):
+  def __init__(self):
     self.game_over_flag = False
     self.win_flag = False
 
     self.levels = []
-    for i in range(levels):
-      self.levels.append(World(randint(10, 30), randint(5, 10), randint(2, 10), self))
+    for level_index in range(2):
+      self.levels.append(World(level_index+1, self))
 
     self.current_level_index = 0
 
@@ -51,24 +51,31 @@ class Game():
       self.get_current_level().update()
 
 class World():
-  def __init__(self, w, h, monsters, game):
-    self.w = w
-    self.h = h
+  def __init__(self, level_name, game):
     self.game = game
-    self.player = Player(0, 0, self) # todo bisogna sistemare il fatto che il player possa essere sul gold
-    while True:
-      x, y = self._get_random_coords()
-      if not (self.player.x == x and self.player.y == y):
-        self.gold = Gold(x, y, self)
-        break
+    self.entities = []
 
-    self.entities = [self.player, self.gold]
+    f = open("./levels/{}.br1".format(level_name))
+    rows = f.readlines()
+    f.close()
 
-    while len(self.entities) - 2 < monsters:
-      x, y = self._get_random_coords()
+    self.h = len(rows)
+    self.w = len(rows[0])-1
 
-      if self.get_entity(x, y) is None:
-        self.entities.append(Monster(x, y, self))
+    for y in range(len(rows)):
+      r = rows[y].replace("\n", "")
+      for x in range(len(r)):
+        char = r[x]
+        if char == "#":
+          self.entities.append(Wall(x, y, self))
+        elif char == "@":
+          self.player = Player(x, y, self)
+          self.entities.append(self.player)
+        elif char == ">":
+          self.entities.append(Monster(x, y, self))
+        elif char == "o":
+          self.gold = Gold(x, y, self)
+          self.entities.append(self.gold)
 
   def update(self):
     for e in self.entities:
@@ -180,7 +187,8 @@ class Gold(Entity):
     else:
       self.graphic = "O"
 
-game = Game(2)
+
+game = Game()
 
 while True:
   while True:
@@ -202,4 +210,3 @@ while True:
         break
       else:
         print("direzione non valida")
-
