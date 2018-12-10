@@ -136,17 +136,7 @@ class Entity():
       self.collide(e)
 
   def collide(self, entity):
-    self_class = self.__class__.__name__
-    entity_class = entity.__class__.__name__
-    
-    if self_class == "Player":
-      if entity_class == "Monster":
-        self.world.game.game_over()
-      elif entity_class == "Gold":
-        self.world.game.win()
-    elif self_class == "Monster":
-      if entity_class == "Player":
-        self.world.game.game_over()
+    return None
   
   def update(self):
     return None
@@ -157,6 +147,14 @@ class Entity():
 class Player(Entity):
   def __init__(self, x, y, world):
     super().__init__(x, y, world, "@")
+
+  def collide(self, entity):
+    entity_class = entity.__class__.__name__
+    if entity_class == "Monster":
+      self.world.game.game_over()
+    elif entity_class == "Gold":
+      self.world.game.win()
+     
 
 class Wall(Entity):
   def __init__(self, x, y, world):
@@ -169,6 +167,11 @@ class Monster(Entity):
 
   def update(self):
     self.move()
+
+  def collide(self, entity):
+    entity_class = entity.__class__.__name__
+    if entity_class == "Player":
+      self.world.game.game_over()
 
 class Gold(Entity):
   def __init__(self, x, y, world):
