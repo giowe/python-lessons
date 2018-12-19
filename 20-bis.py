@@ -1,18 +1,24 @@
 from random import randint, choice
 import os
+import pygame
 
 DIRECTIONS = "w", "a", "s", "d"
+TILE_SIZE = 40
 
 class Game():
-  def __init__(self, levels):
+  def __init__(self):
+    pygame.init()
+    self.screen = pygame.display.set_mode((800, 600))
+    pygame.display.set_caption('gioco')
+
     self.game_over_flag = False
     self.win_flag = False
 
     self.levels = []
-    for i in range(levels):
-      self.levels.append(World(randint(10, 30), randint(5, 10), randint(2, 10), self))
+    for level_index in range(2):
+      self.levels.append(World(level_index+1, self))
 
-    self.current_level_index = 0
+    self.current_level_index = 1
 
   def get_current_level(self):
     return self.levels[self.current_level_index]
@@ -33,6 +39,11 @@ class Game():
       self.current_level_index += 1
 
   def draw(self):
+    level = self.get_current_level() 
+    level.draw()
+    pygame.display.update()
+  
+  def draw_terminal(self):
     os.system("clear")
     level = self.get_current_level()  
     print("---------------------------------------------")
@@ -44,31 +55,46 @@ class Game():
       print("LOOOOSER")
     elif self.win_flag:
       print("A WINNER IS YOU")
-
+  
 
   def update(self):
     if self.is_game_running():
       self.get_current_level().update()
 
 class World():
-  def __init__(self, w, h, monsters, game):
-    self.w = w
-    self.h = h
+  def __init__(self, level_name, game):
     self.game = game
-    self.player = Player(0, 0, self) # todo bisogna sistemare il fatto che il player possa essere sul gold
-    while True:
-      x, y = self._get_random_coords()
-      if not (self.player.x == x and self.player.y == y):
-        self.gold = Gold(x, y, self)
-        break
+    self.entities = []
+    self.player = None
+    self.gold = None 
+    
+    f = open("./levels/{}.br1".format(level_name))
+    rows = f.readlines()
+    f.close()
 
-    self.entities = [self.player, self.gold]
+    self.h = len(rows)
+    self.w = len(rows[0])-1
 
-    while len(self.entities) - 2 < monsters:
-      x, y = self._get_random_coords()
-
-      if self.get_entity(x, y) is None:
-        self.entities.append(Monster(x, y, self))
+    for y in range(len(rows)):
+      r = rows[y].replace("\n", "")
+      for x in range(len(r)):
+        char = r[x]
+        if char == "#":
+          self.entities.append(Wall(x, y, self))
+        elif char == "@":
+          if self.player is None:
+            self.player = Player(x, y, self)
+            self.entities.append(self.player)
+          else:
+            raise Exeption("Il player è già presente nel livello")
+        elif char == ">":
+          self.entities.append(Monster(x, y, self))
+        elif char == "o":
+          if self.gold is None:
+            self.gold = Gold(x, y, self)
+            self.entities.append(self.gold)
+          else:
+            raise Exeption("Il gold è già presente nel livello")
 
   def update(self):
     for e in self.entities:
@@ -81,6 +107,22 @@ class World():
     for e in self.entities:
       if e.x == x and e.y == y:
         return e
+
+  def draw(self):
+    entities2Draw = self.entities[:]
+    for row in range(self.h):
+      for col in range(self.w):
+        for e in entities2Draw:
+          if e.x == col and e.y == row:
+            e.draw()
+            entities2Draw.remove(e)
+            break
+        else:
+          pygame.draw.rect(
+            self.game.screen,
+            (100, 100, 100),
+            pygame.Rect(col * TILE_SIZE, row * TILE_SIZE, TILE_SIZE, TILE_SIZE)
+          )
 
   def __str__(self):
     out=""
@@ -98,11 +140,13 @@ class World():
       out+="\n"
     return out
 
+
 class Entity():
-  def __init__(self, x, y, world, graphic):
+  def __init__(self, x, y, world, graphic, color):
     self.x = x
     self.y = y
     self.graphic = graphic
+    self.color = color
     self.world = world
 
   def move(self, direction=None):
@@ -125,7 +169,7 @@ class Entity():
       if self.x < self.world.w-1:
         future_x += 1
     else:
-      raise Exception("comando non valido, le direzioni accettate sono 'w' 'a' 's' 'd'")
+      raise Exeption("comando non valido, le direzioni accettate sono 'w' 'a' 's' 'd'")
 
     e = self.world.get_entity(future_x, future_y)
     if e is None:
@@ -135,47 +179,51 @@ class Entity():
       self.collide(e)
 
   def collide(self, entity):
-    return None
+    self_class = self.__class__.__name__
+    entity_class = entity.__class__.__name__
+    
+    if self_class == "Player":
+      if entity_class == "Monster":
+        self.world.game.game_over()
+      elif entity_class == "Gold":
+        self.world.game.win()
+    elif self_class == "Monster":
+      if entity_class == "Player":
+        self.world.game.game_over()
   
   def update(self):
     return None
+
+  def draw(self):
+    pygame.draw.rect(
+      self.world.game.screen, 
+      self.color,
+       pygame.Rect(self.x * TILE_SIZE, self.y * TILE_SIZE, TILE_SIZE, TILE_SIZE)
+    )
+    pass
 
   def __str__(self):
     return self.graphic
 
 class Player(Entity):
   def __init__(self, x, y, world):
-    super().__init__(x, y, world, "@")
-
-  def collide(self, entity):
-    entity.__class__ == Gold 
-
-    entity_class = entity.__class__.__name__
-    if entity_class == "Monster":
-      self.world.game.game_over()
-    elif entity_class == "Gold":
-      self.world.game.win()
+    super().__init__(x, y, world, "@", (0, 0, 200))
 
 class Wall(Entity):
   def __init__(self, x, y, world):
-    super().__init__(x, y, world, "#")
+    super().__init__(x, y, world, "#", (20, 20, 20))
 
 class Monster(Entity):
   def __init__(self, x, y, world):
-    #Entity.__init__(self, x, y, ">")
-    super().__init__(x, y, world, ">")
+    #Entity.__init__(self, x, y, "M")
+    super().__init__(x, y, world, ">", (200, 0, 0))
 
   def update(self):
     self.move()
 
-  def collide(self, entity):
-    entity_class = entity.__class__.__name__
-    if entity_class == "Player":
-      self.world.game.game_over()
-
 class Gold(Entity):
   def __init__(self, x, y, world):
-    super().__init__(x, y, world, "o")
+    super().__init__(x, y, world, "o", (255, 255, 0))
 
   def update(self):
     if self.graphic == "O":
@@ -183,25 +231,8 @@ class Gold(Entity):
     else:
       self.graphic = "O"
 
-game = Game(2)
 
-while True:
-  while True:
-    game.draw()
+game = Game()
+game.draw()
 
-    if game.is_game_running():
-      print("dove vuoi muoverti? (w, a, s, d)")
-    
-    print("q per uscire")
-    command = input()
-    
-    if command == "q":
-      exit()
-
-    if game.is_game_running():
-      if command in DIRECTIONS:
-        game.get_player().move(command)
-        game.update()
-        break
-      else:
-        print("direzione non valida")
+input()

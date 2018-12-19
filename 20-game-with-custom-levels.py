@@ -54,7 +54,9 @@ class World():
   def __init__(self, level_name, game):
     self.game = game
     self.entities = []
-
+    self.player = None
+    self.gold = None 
+    
     f = open("./levels/{}.br1".format(level_name))
     rows = f.readlines()
     f.close()
@@ -69,13 +71,19 @@ class World():
         if char == "#":
           self.entities.append(Wall(x, y, self))
         elif char == "@":
-          self.player = Player(x, y, self)
-          self.entities.append(self.player)
+          if self.player is None:
+            self.player = Player(x, y, self)
+            self.entities.append(self.player)
+          else:
+            raise Exeption("Il player è già presente nel livello")
         elif char == ">":
           self.entities.append(Monster(x, y, self))
         elif char == "o":
-          self.gold = Gold(x, y, self)
-          self.entities.append(self.gold)
+          if self.gold is None:
+            self.gold = Gold(x, y, self)
+            self.entities.append(self.gold)
+          else:
+            raise Exeption("Il gold è già presente nel livello")
 
   def update(self):
     for e in self.entities:
