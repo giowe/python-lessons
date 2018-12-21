@@ -18,7 +18,7 @@ class Game():
     for level_index in range(2):
       self.levels.append(World(level_index+1, self))
 
-    self.current_level_index = 1
+    self.current_level_index = 0
 
   def get_current_level(self):
     return self.levels[self.current_level_index]
@@ -233,6 +233,26 @@ class Gold(Entity):
 
 
 game = Game()
-game.draw()
+clock = pygame.time.Clock()
+crashed = False
 
-input()
+while not crashed:
+    player = game.get_player()
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            crashed = True
+        elif event.type == pygame.KEYDOWN:
+          if event.key == pygame.K_LEFT:
+            player.move("a")
+          elif event.key == pygame.K_RIGHT:
+            player.move("d")
+          elif event.key == pygame.K_UP: 
+            player.move("w")
+          elif event.key == pygame.K_DOWN:
+            player.move("s")
+
+          game.update()
+    game.draw()
+    clock.tick(30)
+
+  
