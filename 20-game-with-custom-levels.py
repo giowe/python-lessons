@@ -4,15 +4,15 @@ import os
 DIRECTIONS = "w", "a", "s", "d"
 
 class Game():
-  def __init__(self):
+  def __init__(self, starting_level_index = 0, levels = 2):
     self.game_over_flag = False
     self.win_flag = False
 
     self.levels = []
-    for level_index in range(2):
+    for level_index in range(levels):
       self.levels.append(World(level_index+1, self))
 
-    self.current_level_index = 0
+    self.current_level_index = starting_level_index
 
   def get_current_level(self):
     return self.levels[self.current_level_index]
@@ -75,7 +75,7 @@ class World():
             self.player = Player(x, y, self)
             self.entities.append(self.player)
           else:
-            raise Exeption("Il player è già presente nel livello")
+            raise Exception("Il player è già presente nel livello")
         elif char == ">":
           self.entities.append(Monster(x, y, self))
         elif char == "o":
@@ -83,7 +83,13 @@ class World():
             self.gold = Gold(x, y, self)
             self.entities.append(self.gold)
           else:
-            raise Exeption("Il gold è già presente nel livello")
+            raise Exception("Il gold è già presente nel livello")
+
+    if self.player is None:
+      raise Exception("Nel livello manca il player")
+
+    if self.gold is None:
+      raise Exception("Nel livello manca il gold")
 
   def update(self):
     for e in self.entities:
@@ -141,7 +147,7 @@ class Entity():
       if self.x < self.world.w-1:
         future_x += 1
     else:
-      raise Exeption("comando non valido, le direzioni accettate sono 'w' 'a' 's' 'd'")
+      raise Exception("comando non valido, le direzioni accettate sono 'w' 'a' 's' 'd'")
 
     e = self.world.get_entity(future_x, future_y)
     if e is None:
@@ -196,7 +202,7 @@ class Gold(Entity):
       self.graphic = "O"
 
 
-game = Game()
+game = Game(1)
 
 while True:
   while True:

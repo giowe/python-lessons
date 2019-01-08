@@ -9,7 +9,7 @@ class Monster:
 
   def status(self):
     status = "name: {}\nlevel:{}\nhp: {}/{}".format(self.name, self.level, self.cur_hp, self.max_hp)
-    if self.cur_hp == 0:
+    if self.cur_hp <= 0:
       status += " MORTO"
     print(status)
 
@@ -32,11 +32,3 @@ class Monster:
     print(log)
     target.status()
 
-m1 = Monster("Charmender", 100, 20, 8)
-m2 = Monster("Bulbasaur", 23, 60, 5)
-m2.attack(m1)
-m2.attack(m1)
-m2.attack(m1)
-m1.attack(m2)
-m1.attack(m2)
-m1.attack(m2)

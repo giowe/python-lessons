@@ -1,19 +1,25 @@
-from random import randint, choice
 import pygame
+from random import randint, choice
 import os
 
 DIRECTIONS = "w", "a", "s", "d"
+SCREEN_SIZE = (640, 480)
+TILE_SIZE = (25, 25)
 
 class Game():
-  def __init__(self):
+  def __init__(self, starting_level_index = 0, levels = 2):
+    pygame.init()
+    self.screen = pygame.display.set_mode(SCREEN_SIZE, 0)
+    pygame.display.set_caption("gioco")
+
     self.game_over_flag = False
     self.win_flag = False
 
     self.levels = []
-    for level_index in range(2):
+    for level_index in range(levels):
       self.levels.append(World(level_index+1, self))
 
-    self.current_level_index = 0
+    self.current_level_index = starting_level_index
 
   def get_current_level(self):
     return self.levels[self.current_level_index]
@@ -33,7 +39,7 @@ class Game():
     else:
       self.current_level_index += 1
 
-  def draw(self):
+  def draw_terminal(self):
     os.system("clear")
     level = self.get_current_level()  
     print("---------------------------------------------")
@@ -46,6 +52,10 @@ class Game():
     elif self.win_flag:
       print("A WINNER IS YOU")
 
+  def draw(self):
+    pygame.draw.rect(self.screen, (0, 0, 0), pygame.Rect(0, 0, *SCREEN_SIZE))
+    self.get_current_level().draw()
+    pygame.display.update()
 
   def update(self):
     if self.is_game_running():
@@ -76,7 +86,7 @@ class World():
             self.player = Player(x, y, self)
             self.entities.append(self.player)
           else:
-            raise Exeption("Il player è già presente nel livello")
+            raise Exception("Il player è già presente nel livello")
         elif char == ">":
           self.entities.append(Monster(x, y, self))
         elif char == "o":
@@ -84,7 +94,13 @@ class World():
             self.gold = Gold(x, y, self)
             self.entities.append(self.gold)
           else:
-            raise Exeption("Il gold è già presente nel livello")
+            raise Exception("Il gold è già presente nel livello")
+
+    if self.player is None:
+      raise Exception("Nel livello manca il player")
+
+    if self.gold is None:
+      raise Exception("Nel livello manca il gold")
 
   def update(self):
     for e in self.entities:
@@ -97,6 +113,18 @@ class World():
     for e in self.entities:
       if e.x == x and e.y == y:
         return e
+
+  def draw(self):
+    entities2Draw = self.entities[:]
+    for y in range(self.h):
+      for x in range(self.w):
+        for e in entities2Draw:
+          if e.x == x and e.y == y:
+            e.draw()
+            entities2Draw.remove(e)
+            break
+        else:
+          pygame.draw.rect(self.game.screen, (100, 100, 100), pygame.Rect(x * TILE_SIZE[0], y * TILE_SIZE[1], *TILE_SIZE))
 
   def __str__(self):
     out=""
@@ -116,11 +144,12 @@ class World():
 
 
 class Entity():
-  def __init__(self, x, y, world, graphic):
+  def __init__(self, x, y, world, graphic, color):
     self.x = x
     self.y = y
     self.graphic = graphic
     self.world = world
+    self.color = color
 
   def move(self, direction=None):
     if direction is None:
@@ -142,7 +171,7 @@ class Entity():
       if self.x < self.world.w-1:
         future_x += 1
     else:
-      raise Exeption("comando non valido, le direzioni accettate sono 'w' 'a' 's' 'd'")
+      raise Exception("comando non valido, le direzioni accettate sono 'w' 'a' 's' 'd'")
 
     e = self.world.get_entity(future_x, future_y)
     if e is None:
@@ -170,25 +199,28 @@ class Entity():
   def __str__(self):
     return self.graphic
 
+  def draw(self):
+    pygame.draw.rect(self.world.game.screen, self.color, pygame.Rect(self.x * TILE_SIZE[0], self.y * TILE_SIZE[1], *TILE_SIZE))
+
 class Player(Entity):
   def __init__(self, x, y, world):
-    super().__init__(x, y, world, "@")
+    super().__init__(x, y, world, "@", (0, 255, 0))
 
 class Wall(Entity):
   def __init__(self, x, y, world):
-    super().__init__(x, y, world, "#")
+    super().__init__(x, y, world, "#", (50, 50, 50))
 
 class Monster(Entity):
   def __init__(self, x, y, world):
     #Entity.__init__(self, x, y, "M")
-    super().__init__(x, y, world, ">")
+    super().__init__(x, y, world, ">", (255, 0, 0))
 
   def update(self):
     self.move()
 
 class Gold(Entity):
   def __init__(self, x, y, world):
-    super().__init__(x, y, world, "o")
+    super().__init__(x, y, world, "o", (255, 255, 0))
 
   def update(self):
     if self.graphic == "O":
@@ -196,15 +228,18 @@ class Gold(Entity):
     else:
       self.graphic = "O"
 
+game = Game(1)
+clock = pygame.time.Clock()
 
-game = Game()
+crashed = False
 
-pygame.init()
-screen = pygame.display.set_mode((1024, 768), 0)
-surface = pygame.Surface((1024, 768))
-pygame.display.set_caption("gioco")
-timer = pygame.time.Clock()
+while not crashed:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            crashed = True
 
-while True:
-  timer.tick(60)
-  print("ciao")
+        #print(event)
+    game.draw()
+    game.update()
+    clock.tick(60)
+  
