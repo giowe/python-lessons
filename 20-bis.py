@@ -4,21 +4,23 @@ import pygame
 
 DIRECTIONS = "w", "a", "s", "d"
 TILE_SIZE = 40
+SCREEN_SIZE = (800, 600)
+FONT = "./Amatic-Bold.ttf"
 
 class Game():
   def __init__(self):
     pygame.init()
-    self.screen = pygame.display.set_mode((800, 600))
+    self.screen = pygame.display.set_mode(SCREEN_SIZE)
     pygame.display.set_caption('gioco')
-
+    self.font = pygame.font.Font(FONT, 100)
     self.game_over_flag = False
     self.win_flag = False
 
     self.levels = []
-    for level_index in range(2):
+    for level_index in range(11):
       self.levels.append(World(level_index+1, self))
 
-    self.current_level_index = 0
+    self.current_level_index = 6
 
   def get_current_level(self):
     return self.levels[self.current_level_index]
@@ -40,7 +42,22 @@ class Game():
 
   def draw(self):
     level = self.get_current_level() 
+    pygame.draw.rect(
+      self.screen,
+      (20, 20, 20),
+      pygame.Rect(0, 0, *SCREEN_SIZE)
+    )
     level.draw()
+
+    if self.win_flag:
+      text = self.font.render("A WINNER IS YOU!", True, (0, 255, 0))
+      w, h = text.get_size()
+      self.screen.blit(text, ((SCREEN_SIZE[0] - w) / 2, (SCREEN_SIZE[1] - h) / 2))
+    elif self.game_over_flag:
+      text = self.font.render("WASTED!", True, (255, 0, 0))
+      w, h = text.get_size()
+      self.screen.blit(text, ((SCREEN_SIZE[0] - w) / 2, (SCREEN_SIZE[1] - h) / 2))
+
     pygame.display.update()
   
   def draw_terminal(self):
@@ -139,7 +156,6 @@ class World():
 
       out+="\n"
     return out
-
 
 class Entity():
   def __init__(self, x, y, world, graphic, color):
@@ -242,17 +258,16 @@ while not crashed:
         if event.type == pygame.QUIT:
             crashed = True
         elif event.type == pygame.KEYDOWN:
-          if event.key == pygame.K_LEFT:
-            player.move("a")
-          elif event.key == pygame.K_RIGHT:
-            player.move("d")
-          elif event.key == pygame.K_UP: 
-            player.move("w")
-          elif event.key == pygame.K_DOWN:
-            player.move("s")
+          if game.is_game_running():
+            if event.key == pygame.K_LEFT:
+              player.move("a")
+            elif event.key == pygame.K_RIGHT:
+              player.move("d")
+            elif event.key == pygame.K_UP: 
+              player.move("w")
+            elif event.key == pygame.K_DOWN:
+              player.move("s")
 
           game.update()
     game.draw()
     clock.tick(30)
-
-  
