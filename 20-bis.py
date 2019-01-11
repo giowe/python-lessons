@@ -3,13 +3,14 @@ import os
 import pygame
 
 DIRECTIONS = "w", "a", "s", "d"
-TILE_SIZE = 40
 SCREEN_SIZE = (800, 600)
 FONT = "./Amatic-Bold.ttf"
 
 class Game():
   def __init__(self):
     pygame.init()
+    self.tilemap = pygame.image.load("tilemap.jpg")
+
     self.screen = pygame.display.set_mode(SCREEN_SIZE)
     pygame.display.set_caption('gioco')
     self.font = pygame.font.Font(FONT, 100)
@@ -20,7 +21,7 @@ class Game():
     for level_index in range(11):
       self.levels.append(World(level_index+1, self))
 
-    self.current_level_index = 6
+    self.current_level_index = 0
 
   def get_current_level(self):
     return self.levels[self.current_level_index]
@@ -45,10 +46,11 @@ class Game():
     pygame.draw.rect(
       self.screen,
       (20, 20, 20),
-      pygame.Rect(0, 0, *SCREEN_SIZE)
+      pygame.Rect(0, 0, * SCREEN_SIZE)
     )
     level.draw()
 
+    self.screen.blit(self.tilemap, (0, 0), pygame.Rect(2, 2, 30, 30))
     if self.win_flag:
       text = self.font.render("A WINNER IS YOU!", True, (0, 255, 0))
       w, h = text.get_size()
@@ -92,6 +94,12 @@ class World():
     self.h = len(rows)
     self.w = len(rows[0])-1
 
+    if self.h > self.w:
+      self.tile_size = SCREEN_SIZE[1] // self.h
+    else:
+      self.tile_size = SCREEN_SIZE[0] // self.w
+    
+
     for y in range(len(rows)):
       r = rows[y].replace("\n", "")
       for x in range(len(r)):
@@ -103,7 +111,7 @@ class World():
             self.player = Player(x, y, self)
             self.entities.append(self.player)
           else:
-            raise Exeption("Il player è già presente nel livello")
+            raise Exception("Il player è già presente nel livello {}".format(level_name))
         elif char == ">":
           self.entities.append(Monster(x, y, self))
         elif char == "o":
@@ -111,7 +119,12 @@ class World():
             self.gold = Gold(x, y, self)
             self.entities.append(self.gold)
           else:
-            raise Exeption("Il gold è già presente nel livello")
+            raise Exception("Il gold è già presente nel livello {}".format(level_name))
+
+    if self.player is None:
+      raise Exception("Il player non è presente nel livello {}".format(level_name))
+    if self.gold is None:
+      raise Exception("Il gold non è presente nel livello {}".format(level_name))
 
   def update(self):
     for e in self.entities:
@@ -135,10 +148,11 @@ class World():
             entities2Draw.remove(e)
             break
         else:
+          tile_size = self.tile_size
           pygame.draw.rect(
             self.game.screen,
             (100, 100, 100),
-            pygame.Rect(col * TILE_SIZE, row * TILE_SIZE, TILE_SIZE, TILE_SIZE)
+            pygame.Rect(col * tile_size, row * tile_size, tile_size, tile_size)
           )
 
   def __str__(self):
@@ -185,7 +199,7 @@ class Entity():
       if self.x < self.world.w-1:
         future_x += 1
     else:
-      raise Exeption("comando non valido, le direzioni accettate sono 'w' 'a' 's' 'd'")
+      raise Exception("comando non valido, le direzioni accettate sono 'w' 'a' 's' 'd'")
 
     e = self.world.get_entity(future_x, future_y)
     if e is None:
@@ -211,10 +225,11 @@ class Entity():
     return None
 
   def draw(self):
+    tile_size = self.world.tile_size
     pygame.draw.rect(
       self.world.game.screen, 
       self.color,
-       pygame.Rect(self.x * TILE_SIZE, self.y * TILE_SIZE, TILE_SIZE, TILE_SIZE)
+       pygame.Rect(self.x * tile_size, self.y * tile_size, tile_size, tile_size)
     )
     pass
 
@@ -267,6 +282,8 @@ while not crashed:
               player.move("w")
             elif event.key == pygame.K_DOWN:
               player.move("s")
+            elif event.key == pygame.K_n:
+              game.win()
 
           game.update()
     game.draw()
