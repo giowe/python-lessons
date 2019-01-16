@@ -6,10 +6,22 @@ DIRECTIONS = "w", "a", "s", "d"
 SCREEN_SIZE = (800, 600)
 FONT = "./Amatic-Bold.ttf"
 
+class Tilemap():
+  def __init__(self, image_path, tile_size, padding, offset = (0, 0)):
+    self.palette = pygame.image.load(image_path)
+    self.tile_size = tile_size
+    self.padding = padding
+    self.offset = offset
+  
+  def cut_n_draw(self, surface, tile_coords, surface_coords):
+    x = self.offset[0] + (tile_coords[0] * (self.tile_size[0] + self.padding[0]))
+    y = self.offset[1] + (tile_coords[1] * (self.tile_size[1] + self.padding[1]))
+    surface.blit(self.palette, surface_coords, pygame.Rect(x, y, *self.tile_size))
+
 class Game():
   def __init__(self):
     pygame.init()
-    self.tilemap = pygame.image.load("tilemap.jpg")
+    self.tilemap = Tilemap("tilemap.jpg", (30, 30), (3, 3), (2, 2))
 
     self.screen = pygame.display.set_mode(SCREEN_SIZE)
     pygame.display.set_caption('gioco')
@@ -43,14 +55,13 @@ class Game():
 
   def draw(self):
     level = self.get_current_level() 
-    pygame.draw.rect(
-      self.screen,
-      (20, 20, 20),
-      pygame.Rect(0, 0, * SCREEN_SIZE)
-    )
+    
+    for x in range(SCREEN_SIZE[0]//self.tilemap.tile_size[0]+1):
+      for y in range(SCREEN_SIZE[1]//self.tilemap.tile_size[1]+1):
+        self.tilemap.cut_n_draw(self.screen, (3, 3), (x * 30, y * 30))
+
     level.draw()
 
-    self.screen.blit(self.tilemap, (0, 0), pygame.Rect(2, 2, 30, 30))
     if self.win_flag:
       text = self.font.render("A WINNER IS YOU!", True, (0, 255, 0))
       w, h = text.get_size()
@@ -93,12 +104,6 @@ class World():
 
     self.h = len(rows)
     self.w = len(rows[0])-1
-
-    if self.h > self.w:
-      self.tile_size = SCREEN_SIZE[1] // self.h
-    else:
-      self.tile_size = SCREEN_SIZE[0] // self.w
-    
 
     for y in range(len(rows)):
       r = rows[y].replace("\n", "")
@@ -148,12 +153,21 @@ class World():
             entities2Draw.remove(e)
             break
         else:
+          tile_w, tile_h = self.game.tilemap.tile_size
+          self.game.tilemap.cut_n_draw(
+            self.game.screen,
+            (1, 1),
+            (col * tile_w, row * tile_h)
+          )
+          
+          '''
           tile_size = self.tile_size
           pygame.draw.rect(
             self.game.screen,
             (100, 100, 100),
             pygame.Rect(col * tile_size, row * tile_size, tile_size, tile_size)
           )
+          '''
 
   def __str__(self):
     out=""
@@ -172,11 +186,11 @@ class World():
     return out
 
 class Entity():
-  def __init__(self, x, y, world, graphic, color):
+  def __init__(self, x, y, world, graphic, tile_graphic):
     self.x = x
     self.y = y
     self.graphic = graphic
-    self.color = color
+    self.tile_graphic = tile_graphic
     self.world = world
 
   def move(self, direction=None):
@@ -225,36 +239,42 @@ class Entity():
     return None
 
   def draw(self):
-    tile_size = self.world.tile_size
+    tile_w, tile_h = self.world.game.tilemap.tile_size
+    self.world.game.tilemap.cut_n_draw(
+      self.world.game.screen,
+      self.tile_graphic,
+      (self.x * tile_w, self.y * tile_h)
+    )
+    '''
     pygame.draw.rect(
       self.world.game.screen, 
       self.color,
        pygame.Rect(self.x * tile_size, self.y * tile_size, tile_size, tile_size)
     )
-    pass
+    '''
 
   def __str__(self):
     return self.graphic
 
 class Player(Entity):
   def __init__(self, x, y, world):
-    super().__init__(x, y, world, "@", (0, 0, 200))
+    super().__init__(x, y, world, "@", (0, 0))
 
 class Wall(Entity):
   def __init__(self, x, y, world):
-    super().__init__(x, y, world, "#", (20, 20, 20))
+    super().__init__(x, y, world, "#", (4, 0))
 
 class Monster(Entity):
   def __init__(self, x, y, world):
     #Entity.__init__(self, x, y, "M")
-    super().__init__(x, y, world, ">", (200, 0, 0))
+    super().__init__(x, y, world, ">", (4, 2))
 
   def update(self):
     self.move()
 
 class Gold(Entity):
   def __init__(self, x, y, world):
-    super().__init__(x, y, world, "o", (255, 255, 0))
+    super().__init__(x, y, world, "o", (3, 1))
 
   def update(self):
     if self.graphic == "O":

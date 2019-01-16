@@ -31,4 +31,3 @@ class Monster:
     log = "{} attacca {}\nvengono inflitti {} danni".format(self.name, target.name, damage)
     print(log)
     target.status()
-
