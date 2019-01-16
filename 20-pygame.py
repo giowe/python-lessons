@@ -7,7 +7,7 @@ SCREEN_SIZE = (640, 480)
 TILE_SIZE = (25, 25)
 
 class Game():
-  def __init__(self, starting_level_index = 0, levels = 2):
+  def __init__(self, starting_level_index = 0, levels = 11):
     pygame.init()
     self.screen = pygame.display.set_mode(SCREEN_SIZE, 0)
     pygame.display.set_caption("gioco")
@@ -228,18 +228,31 @@ class Gold(Entity):
     else:
       self.graphic = "O"
 
-game = Game(1)
+game = Game(0)
 clock = pygame.time.Clock()
 
 crashed = False
 
 while not crashed:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            crashed = True
+  player = game.get_player()
+  for event in pygame.event.get():
+    if event.type == pygame.QUIT:
+      crashed = True
+    elif event.type == pygame.KEYDOWN:  
+      if game.is_game_running():
+        if event.key == pygame.K_LEFT:
+          player.move("a")
+        elif event.key == pygame.K_RIGHT:
+          player.move("d")
+        elif event.key == pygame.K_UP:
+          player.move("w")
+        elif event.key == pygame.K_DOWN:
+          player.move("s")
+        elif event.key == pygame.K_n:
+          game.win()
+        
+        game.update()  
 
-        #print(event)
-    game.draw()
-    game.update()
-    clock.tick(60)
+  game.draw()
   
+  clock.tick(30)
