@@ -9,7 +9,7 @@ class Persona:
     self.anni += 1
 
   def saluta(self, nome):
-    return "ciao " + nome + " io sono " + self.nome + " " + self.cognome
+    return "ciao {}! Io sono {} {} e ho {} anni".format(nome, self.nome, self.cognome, self.anni)
 
   def __str__(self):
     return "io sono " + self.nome + " " + self.cognome
@@ -21,18 +21,22 @@ class Persona:
 
 class Studente(Persona):
   def __init__(self, nome, cognome, anni, scuola):
-    Persona.__init__(self, nome, cognome, None)
+    Persona.__init__(self, nome, cognome, anni)
     self.scuola = scuola
 
+  def saluta(self, nome):
+    return Persona.saluta(self, nome) + " della scuola {}".format(self.scuola)
+  '''
   def saluta(self, nome):
     return Persona.saluta(self, nome) + " sono iscritto nella scuola di nome " + self.scuola 
 
   def __str__(self):
     return Persona.__str__(self) + " " + self.scuola
-
+  '''
 #---------------------------------------
 p = Persona("Giovanni", "Bruno", 31)
-s = Studente("Giovanni", "Bruno", 31, "Classico")
+s = Studente("Tizio", "Rossi", 15, "Spalla")
 
-print(p.saluta("x"))
-print(s.saluta("x"))
+print(s.saluta("Andonio"))
+s.compleanno()
+print(s.anni)
