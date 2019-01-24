@@ -7,3 +7,4 @@ Studiare i seguenti link:
 - funzioni: https://www.tutorialspoint.com/python3/python_functions.htm
 - protocollo http: https://code.tutsplus.com/tutorials/http-the-protocol-every-web-developer-must-know-part-1--net-31177
 - modulo requests: http://it.python-requests.org/it/latest/user/quickstart.html
+- git: http://rogerdudler.github.io/git-guide/
