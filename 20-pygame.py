@@ -4,14 +4,28 @@ import os
 
 DIRECTIONS = "w", "a", "s", "d"
 SCREEN_SIZE = (640, 480)
-TILE_SIZE = (25, 25)
+
+class Tilemap():
+  def __init__(self, file_path, tile_size, offset, padding):
+    self.palette = pygame.image.load(file_path)
+    self.tile_size = tile_size
+    self.offset = offset
+    self.padding = padding
+
+  def cut_n_draw(self, surface, tile_coords, surface_coords, flag = 0):
+    surface.blit(
+      self.palette,
+      (surface_coords[0] * self.tile_size[0], surface_coords[1] * self.tile_size[1]),
+      (tile_coords[0] * (self.tile_size[0] + self.padding[0]), tile_coords[1] * (self.tile_size[1] + self.padding[1]), *self.tile_size),
+      flag
+    )
 
 class Game():
   def __init__(self, starting_level_index = 0, levels = 11):
     pygame.init()
     self.screen = pygame.display.set_mode(SCREEN_SIZE, 0)
     pygame.display.set_caption("gioco")
-
+    self.tilemap = Tilemap("./tilemap.png", (20, 20), (0, 0), (1, 1))
     self.game_over_flag = False
     self.win_flag = False
 
@@ -53,8 +67,10 @@ class Game():
       print("A WINNER IS YOU")
 
   def draw(self):
-    pygame.draw.rect(self.screen, (0, 0, 0), pygame.Rect(0, 0, *SCREEN_SIZE))
+    #pygame.draw.rect(self.screen, (0, 0, 0), pygame.Rect(0, 0, *SCREEN_SIZE))
+    
     self.get_current_level().draw()
+
     pygame.display.update()
 
   def update(self):
@@ -67,13 +83,25 @@ class World():
     self.entities = []
     self.player = None
     self.gold = None 
-    
+
+   
     f = open("./levels/{}.br1".format(level_name))
     rows = f.readlines()
     f.close()
 
     self.h = len(rows)
     self.w = len(rows[0])-1
+    self.type = rows[-1][-1]
+
+    self.background = pygame.Surface(SCREEN_SIZE)
+    if self.type == "G":
+      bg_tileset = [(4, 3), (4, 2)]
+    elif self.type == "L":
+      bg_tileset = [(3, 0), (4, 0)]
+
+    for x in range(int(SCREEN_SIZE[0] / self.game.tilemap.tile_size[0]) + 1):
+      for y in range(int(SCREEN_SIZE[1] / self.game.tilemap.tile_size[1]) + 1):
+        self.game.tilemap.cut_n_draw(self.background, choice(bg_tileset), (x, y))
 
     for y in range(len(rows)):
       r = rows[y].replace("\n", "")
@@ -115,6 +143,7 @@ class World():
         return e
 
   def draw(self):
+    self.game.screen.blit(self.background, (0, 0))
     entities2Draw = self.entities[:]
     for y in range(self.h):
       for x in range(self.w):
@@ -124,7 +153,8 @@ class World():
             entities2Draw.remove(e)
             break
         else:
-          pygame.draw.rect(self.game.screen, (100, 100, 100), pygame.Rect(x * TILE_SIZE[0], y * TILE_SIZE[1], *TILE_SIZE))
+          self.game.tilemap.cut_n_draw(self.game.screen, (0, 0), (x, y))
+          #pygame.draw.rect(self.game.screen, (100, 100, 100), pygame.Rect(x * TILE_SIZE[0], y * TILE_SIZE[1], *TILE_SIZE))
 
   def __str__(self):
     out=""
@@ -144,12 +174,12 @@ class World():
 
 
 class Entity():
-  def __init__(self, x, y, world, graphic, color):
+  def __init__(self, x, y, world, graphic, tileset):
     self.x = x
     self.y = y
     self.graphic = graphic
     self.world = world
-    self.color = color
+    self.tileset = tileset
 
   def move(self, direction=None):
     if direction is None:
@@ -200,27 +230,27 @@ class Entity():
     return self.graphic
 
   def draw(self):
-    pygame.draw.rect(self.world.game.screen, self.color, pygame.Rect(self.x * TILE_SIZE[0], self.y * TILE_SIZE[1], *TILE_SIZE))
+    self.world.game.tilemap.cut_n_draw(self.world.game.screen, self.tileset, (self.x, self.y), pygame.BLEND_RGB_MAX )    
 
 class Player(Entity):
   def __init__(self, x, y, world):
-    super().__init__(x, y, world, "@", (0, 255, 0))
+    super().__init__(x, y, world, "@", (0, 1))
 
 class Wall(Entity):
   def __init__(self, x, y, world):
-    super().__init__(x, y, world, "#", (50, 50, 50))
+    super().__init__(x, y, world, "#", (3, 0))
 
 class Monster(Entity):
   def __init__(self, x, y, world):
     #Entity.__init__(self, x, y, "M")
-    super().__init__(x, y, world, ">", (255, 0, 0))
+    super().__init__(x, y, world, ">", (0, 2))
 
   def update(self):
     self.move()
 
 class Gold(Entity):
   def __init__(self, x, y, world):
-    super().__init__(x, y, world, "o", (255, 255, 0))
+    super().__init__(x, y, world, "o", (4, 1))
 
   def update(self):
     if self.graphic == "O":

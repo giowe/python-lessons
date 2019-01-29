@@ -105,9 +105,18 @@ class World():
     self.h = len(rows)
     self.w = len(rows[0])-1
 
+    tilemap = self.game.tilemap
+  
+    background = pygame.Surface((self.w * tilemap.tile_size[0], self.h * tilemap.tile_size[1]))
+    self.layers = [background]
+
     for y in range(len(rows)):
       r = rows[y].replace("\n", "")
       for x in range(len(r)):
+        #GENERATING BACKGROUND
+        tilemap.cut_n_draw(background, choice([(4, 2), (5, 2), (6, 2)]), (x * tilemap.tile_size[0], y * tilemap.tile_size[1]))
+
+        #MAP PARSING
         char = r[x]
         if char == "#":
           self.entities.append(Wall(x, y, self))
@@ -144,6 +153,9 @@ class World():
         return e
 
   def draw(self):
+    for layer in self.layers:
+      self.game.screen.blit(layer, (0, 0))
+
     entities2Draw = self.entities[:]
     for row in range(self.h):
       for col in range(self.w):
@@ -152,22 +164,6 @@ class World():
             e.draw()
             entities2Draw.remove(e)
             break
-        else:
-          tile_w, tile_h = self.game.tilemap.tile_size
-          self.game.tilemap.cut_n_draw(
-            self.game.screen,
-            (1, 1),
-            (col * tile_w, row * tile_h)
-          )
-          
-          '''
-          tile_size = self.tile_size
-          pygame.draw.rect(
-            self.game.screen,
-            (100, 100, 100),
-            pygame.Rect(col * tile_size, row * tile_size, tile_size, tile_size)
-          )
-          '''
 
   def __str__(self):
     out=""
@@ -190,7 +186,7 @@ class Entity():
     self.x = x
     self.y = y
     self.graphic = graphic
-    self.tile_graphic = tile_graphic
+    self.tile_graphic = choice(tile_graphic)
     self.world = world
 
   def move(self, direction=None):
@@ -258,23 +254,23 @@ class Entity():
 
 class Player(Entity):
   def __init__(self, x, y, world):
-    super().__init__(x, y, world, "@", (0, 0))
+    super().__init__(x, y, world, "@", [(2, 3)])
 
 class Wall(Entity):
   def __init__(self, x, y, world):
-    super().__init__(x, y, world, "#", (4, 0))
+    super().__init__(x, y, world, "#", [(13, 1), (14, 1)]) 
 
 class Monster(Entity):
   def __init__(self, x, y, world):
     #Entity.__init__(self, x, y, "M")
-    super().__init__(x, y, world, ">", (4, 2))
+    super().__init__(x, y, world, ">", [(0, 1)])
 
   def update(self):
     self.move()
 
 class Gold(Entity):
   def __init__(self, x, y, world):
-    super().__init__(x, y, world, "o", (3, 1))
+    super().__init__(x, y, world, "o", [(1, 3)])
 
   def update(self):
     if self.graphic == "O":

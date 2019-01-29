@@ -37,6 +37,5 @@ class Studente(Persona):
 p = Persona("Giovanni", "Bruno", 31)
 s = Studente("Tizio", "Rossi", 15, "Spalla")
 
-print(s.saluta("Andonio"))
-s.compleanno()
-print(s.anni)
+Persona.saluta(p, "antonio")
+p.saluta("antonio")
