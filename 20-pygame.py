@@ -93,15 +93,27 @@ class World():
     self.w = len(rows[0])-1
     self.type = rows[-1][-1]
 
-    self.background = pygame.Surface(SCREEN_SIZE)
+    background = pygame.Surface(SCREEN_SIZE)
     if self.type == "G":
       bg_tileset = [(4, 3), (4, 2)]
+      layer1_tileset = [(2, 2), (3, 2)]
     elif self.type == "L":
       bg_tileset = [(3, 0), (4, 0)]
+      layer1_tileset = [(0, 0), (1, 0), (2, 0)]
 
     for x in range(int(SCREEN_SIZE[0] / self.game.tilemap.tile_size[0]) + 1):
       for y in range(int(SCREEN_SIZE[1] / self.game.tilemap.tile_size[1]) + 1):
-        self.game.tilemap.cut_n_draw(self.background, choice(bg_tileset), (x, y))
+        self.game.tilemap.cut_n_draw(background, choice(bg_tileset), (x, y))
+    
+    layer1 = pygame.Surface((self.w * self.game.tilemap.tile_size[0], self.h * self.game.tilemap.tile_size[1]))
+    for x in range(self.w):
+      for y in range(self.h):
+        self.game.tilemap.cut_n_draw(layer1, choice(layer1_tileset), (x, y))
+
+    self.layers = [
+      background,
+      layer1
+    ]
 
     for y in range(len(rows)):
       r = rows[y].replace("\n", "")
@@ -143,7 +155,9 @@ class World():
         return e
 
   def draw(self):
-    self.game.screen.blit(self.background, (0, 0))
+    for layer in self.layers:
+      self.game.screen.blit(layer, (0, 0))
+
     entities2Draw = self.entities[:]
     for y in range(self.h):
       for x in range(self.w):
@@ -152,8 +166,6 @@ class World():
             e.draw()
             entities2Draw.remove(e)
             break
-        else:
-          self.game.tilemap.cut_n_draw(self.game.screen, (0, 0), (x, y))
           #pygame.draw.rect(self.game.screen, (100, 100, 100), pygame.Rect(x * TILE_SIZE[0], y * TILE_SIZE[1], *TILE_SIZE))
 
   def __str__(self):
@@ -230,7 +242,7 @@ class Entity():
     return self.graphic
 
   def draw(self):
-    self.world.game.tilemap.cut_n_draw(self.world.game.screen, self.tileset, (self.x, self.y), pygame.BLEND_RGB_MAX )    
+    self.world.game.tilemap.cut_n_draw(self.world.game.screen, self.tileset, (self.x, self.y))    
 
 class Player(Entity):
   def __init__(self, x, y, world):
