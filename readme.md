@@ -13,7 +13,7 @@ Studiare i seguenti link:
   - http://ndpsoftware.com/git-cheatsheet.html
 
 - Sublime text settings:  
-  Cliccare su `Preferences` > `Settings` e incollare quanto segue nella sezione di destra
+  cliccare su `Preferences` > `Settings` e incollare quanto segue nella sezione di destra
 ```
 {
 	"font_size": 18,
