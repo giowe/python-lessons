@@ -11,3 +11,18 @@ Studiare i seguenti link:
 - git: 
   - http://rogerdudler.github.io/git-guide/
   - http://ndpsoftware.com/git-cheatsheet.html
+
+- Sublime text settings
+Cliccare su `Preferences` > `Settings` e incollare quanto segue nella sezione di destra
+```
+{
+	"font_size": 18,
+	"ignored_packages":
+	[
+		"Vintage"
+	],
+	"save_on_focus_lost": true,
+	"tab_size": 2,
+	"translate_tabs_to_spaces": true
+}
+```
