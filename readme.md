@@ -12,8 +12,8 @@ Studiare i seguenti link:
   - http://rogerdudler.github.io/git-guide/
   - http://ndpsoftware.com/git-cheatsheet.html
 
-- Sublime text settings
-Cliccare su `Preferences` > `Settings` e incollare quanto segue nella sezione di destra
+- Sublime text settings:  
+  Cliccare su `Preferences` > `Settings` e incollare quanto segue nella sezione di destra
 ```
 {
 	"font_size": 18,
