@@ -1,0 +1,30 @@
+Data una parola maiuscola restituiscila minuscola
+Dato un numero restituiscilo moltiplicato per se stesso
+Dato un dictionary restituisci il valore alla chiave 'cognome'
+Data una lista restituisci la sua lunghezza
+Data una lista di parole invia una lista contenente le stesse parole tutte maiuscole
+Data una lista di numeri restituiscine la somma
+Data una lista di numeri restituisci la somma dei numeri maggiori di 5
+Data una lista di numeri restituisci la somma dei numeri in posizioni pari (zero compreso)
+Data una lista di numeri restituisci la somma dei numeri dispari
+Data una lista di parole ordinale in ordine alfabetico
+Data una lista di parole ordinale in ordine alfabetico e restituiscile tutte minuscole (attenzione, le parole possono avere delle lettere maiuscole)
+Data una lista di numeri restituiscine una contenente i numeri precedenti a quelli dati; es: [3, 5, 2] ---> [2, 4, 1]
+Data una lista di numeri restituiscine una in cui ogni numero sia sommato con quello alla posizione successiva; l'ultimo numero della lista rimane invariato
+Data una lista di numeri, conta i positivi, i negativi e gli zeri e restituisci un dictionary che riporti i dati rilevati con le seguenti chiavi: "positivi", "negativi", "zeri"
+data una lista di parole, restituisci una nuova lista in cui le parole con un numero di lettere pari siano scritte in maiuscolo e le altre in minuscolo
+data una lista di parole, restituisci una sola stringa che contenga tutte le parole della lista separate da uno spazio. ATTENZIONE: l'ultima parola non deve essere seguita da uno spazio
+data una lista di parole, restituisci una sola stringa formata dall'ultimo carattere di ogni parola
+data una lista di parole, restituisci una sola stringa formata dal primo carattere di ogni parola più lunga di 4 caratteri
+Dato un numero restituisci una lista contenente tutti i suoi divisori ordinati in ordine crescente
+Dato una lista di persone restituisci una lista contenente il numero di figli di ciascuna persona
+Data una lista di numeri restituisci una lista in cui siano esclusi tutti i valori maggiori di 5
+Data una lista di numeri restituiscine una in cui ci siano presenti solo i valori compresi tra 3 e 6 inclusi
+Data una lista di persone restituisci il numero derivato dalla somma di tutti i loro anni
+Data una lista di persone restituisci una lista di nomi di tutte le persone che hanno un cognome che inizia per C
+data una lista di stringhe restituisci il numero di "a" che compaiono in totale
+data una lista di numeri restituisci una lista in cui tutti i positivi siano negativi e viceversa
+dato un dictionary contenente le chiavi "negozio" e "magazzino", restituisci una lista formata da tutti i prodotti di entrambe le liste non ripetuti e ordinati alfabeticamente
+dato un dictionary contenente le chiavi "negozio" e "magazzino", restituisci un dictionary nel quale la chiave sia il nome di ciascun prodotto DEL NEGOZIO e il valore sia il numero di pezzi di quel prodotto presenti SIA NEL NEGOZIO CHE NEL MAGAZZINO
+dato un numero calcolane il fattoriale
+data una mappa costituita da una stringa di varie righe, trova le coordinate della posizione del tesoro (reppresentata dal carattere X) e restituiscile in un dictionary alle chiavi "x" e "y"
