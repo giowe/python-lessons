@@ -31,45 +31,53 @@ for i in range(3):
     print('---')
 print('end.')
 
+#es 6 quale output ottengo dal seguente programma:
 lista = ["a", "b", "c"]
 
 for i in range(len(lista)):
     print(i, lista[i])
-    
+ 
+#es 7 quale output ottengo dal seguente programma:
 for i in range(5, 7):
     print(i - 1)
-    
+
+#es 6 quale output ottengo dal seguente programma:
 i = 0
 while i < 10:
     print(i)
-    
+
+#es 7 quale output ottengo dal seguente programma:
 for i in range(1, 4):
     if i > 2:
         print("ciao")
     else:
         print(i + i - 1)
 
+#es 8 quale output ottengo dal seguente programma:
 for x in range(3):
     for y in range(3):
         for z in range(2):
-            print(x + y)
-            
+            print(x + y + z)
+
+#es 9 quale output ottengo dal seguente programma:
 lista = ["a", "b", "c"]
 while len(lista) > 0:
     print(lista.pop())
-            
+  
+#es 10 quale output ottengo dal seguente programma:            
 lista = [1]
 while len(lista) > 0:
     n = lista.pop()
     print(n)
     lista.append(n+1)
 
+#es 11 quale output ottengo dal seguente programma:    
 for x in range(2):
     print("---")
     for y in range(25, 27):
         if y % 2 == 0:
             print(y + x)
         else
-            print(y - x
+            print(y - x) 
     print("---")
     
