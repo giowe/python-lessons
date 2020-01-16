@@ -30,3 +30,46 @@ for i in range(3):
         print(i, l, lista[i], lista[l])
     print('---')
 print('end.')
+
+lista = ["a", "b", "c"]
+
+for i in range(len(lista)):
+    print(i, lista[i])
+    
+for i in range(5, 7):
+    print(i - 1)
+    
+i = 0
+while i < 10:
+    print(i)
+    
+for i in range(1, 4):
+    if i > 2:
+        print("ciao")
+    else:
+        print(i + i - 1)
+
+for x in range(3):
+    for y in range(3):
+        for z in range(2):
+            print(x + y)
+            
+lista = ["a", "b", "c"]
+while len(lista) > 0:
+    print(lista.pop())
+            
+lista = [1]
+while len(lista) > 0:
+    n = lista.pop()
+    print(n)
+    lista.append(n+1)
+
+for x in range(2):
+    print("---")
+    for y in range(25, 27):
+        if y % 2 == 0:
+            print(y + x)
+        else
+            print(y - x
+    print("---")
+    
