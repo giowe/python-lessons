@@ -106,3 +106,58 @@ for p in lista:
 for p in lista2:
     print(p)
 
+
+#es 16 quale output ottengo dal seguente programma:
+lista = ["a", "b", "Z"]
+lista.sort()
+i = 0
+while True:
+    print(lista[i])
+    
+    if lista[i] == "Z":
+        break
+    
+print(i)
+
+#es 17 quale output ottengo dal seguente programma:
+lista = []
+
+for i in range(3):
+    lista.append(i)
+    lista.reverse()
+    
+for e in lista:
+    print(i + 1)
+    
+#es 18 quale output ottengo dal seguente programma:
+lista = []
+
+for i in range(3):
+    lista.append(i)
+    lista.reverse()
+    
+for e in lista:
+    print(e + 1)
+    
+#es 19 quale valore deve assumere s perchè l'output sia:
+'''
+10
+0
+11
+1
+'''
+s = int(input("inserire s: "))
+
+for i in range(s, s + 2):
+    print(i + s)
+    print(i - s)
+    if s % 3 == 0:
+        break
+        
+#es 20 quale output ottengo dal seguente programma:
+lista = [2, 4, 6]
+while lista[-1] % 2 == 0:
+    lista.insert(0, lista.pop() + 1)
+    
+for n in lista:
+    print(n)
