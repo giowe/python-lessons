@@ -1,4 +1,6 @@
-from spalla import Verifica # impori la libreria
+# Se la libreria spalla non e' installata eseguire sul terminale il comando `pip install spalla --user`
+
+from spalla import Verifica # importi la libreria
 
 Verifica.firma("Nome Cognome") # firmi la verifica, questa operazione è obbligatoria almeno una volta
 
